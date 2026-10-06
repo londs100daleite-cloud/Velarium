@@ -1,0 +1,1784 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VELARIUM</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* POSISI DIBALIK: EMERALD/SAPPHIRE GELAP DI ATAS, BURGUNDY DI BAWAH */
+  --velvet-top: #041410;       /* Emerald pekat dingin di atas agar teks emas menyala */
+  --velvet-mid: #060d1a;       /* Midnight Sapphire di tengah */
+  --velvet-bottom: #1c0813;    /* Burgundy beludru anggur di bagian bawah */
+  
+  --bg-surface: rgba(10, 18, 22, 0.88);
+  --bg-card: rgba(14, 22, 28, 0.92);
+  --bg-panel: rgba(18, 28, 36, 0.96);
+  
+  --gold-highlight: #fff7d6;
+  --gold-primary: #e6c35c;
+  --gold-deep: #b38b22;
+  --gold-glow: rgba(230, 195, 92, 0.5);
+  --silver-frost: #d4dbe8;
+  
+  --text-main: #f5f7fa;
+  --text-muted: #9aa4b8;
+  --text-dim: #677287;
+  
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-gold: rgba(230, 195, 92, 0.35);
+  
+  --font-display: 'Cinzel', serif;
+  --font-reading: 'Lora', serif;
+  --font-ui: 'Plus Jakarta Sans', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* WARNA LATAR BELAKANG TERBALIK AGAR JUDUL VELARIUM KONTRAS & MENYALA */
+body {
+  background: 
+    radial-gradient(circle at 50% 8%, rgba(20, 80, 60, 0.38) 0%, transparent 48%),
+    radial-gradient(circle at 80% 90%, rgba(130, 20, 75, 0.4) 0%, transparent 55%),
+    linear-gradient(180deg, var(--velvet-top) 0%, var(--velvet-mid) 45%, var(--velvet-bottom) 100%);
+  background-attachment: fixed;
+  color: var(--text-main);
+  font-family: var(--font-ui);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.velarium-root { min-height: 100vh; display: flex; flex-direction: column; }
+
+/* TOP NAV */
+.top-nav {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 24px; background: rgba(4, 20, 16, 0.92);
+  backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-gold);
+}
+
+.nav-left-anchor { display: flex; align-items: center; gap: 10px; }
+.celestial-sigil-mini {
+  font-size: 1.5rem; color: var(--gold-primary);
+  filter: drop-shadow(0 0 8px var(--gold-primary));
+}
+.badge-role-guest {
+  font-size: 0.7rem; color: var(--silver-frost); border: 1px solid var(--border-subtle);
+  padding: 3px 8px; border-radius: 20px; background: rgba(255,255,255,0.04);
+}
+.badge-role-member {
+  font-size: 0.7rem; color: #34d399; border: 1px solid rgba(52, 211, 153, 0.4);
+  padding: 3px 8px; border-radius: 20px; background: rgba(52, 211, 153, 0.1); font-weight: bold;
+}
+.badge-role-owner {
+  font-size: 0.7rem; color: var(--gold-primary); border: 1px solid var(--border-gold);
+  padding: 3px 8px; border-radius: 20px; background: rgba(230, 195, 92, 0.15); font-weight: bold;
+}
+
+.nav-cluster { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.nav-chip {
+  display: flex; align-items: center; gap: 6px; background: var(--bg-surface);
+  color: var(--silver-frost); border: 1px solid var(--border-subtle); padding: 7px 12px;
+  border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+}
+.nav-chip:hover { background: var(--bg-card); color: var(--gold-primary); border-color: var(--border-gold); }
+.nav-chip.gold { background: rgba(230, 195, 92, 0.1); border-color: var(--border-gold); color: var(--gold-primary); }
+.nav-chip.auth-btn { background: rgba(230, 195, 92, 0.2); border-color: var(--gold-primary); color: #fff; }
+
+.icon-circle {
+  position: relative; width: 36px; height: 36px; border-radius: 50%;
+  background: var(--bg-surface); border: 1px solid var(--border-subtle);
+  color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.badge-count {
+  position: absolute; top: -3px; right: -3px; background: var(--gold-primary);
+  color: #000; font-size: 0.65rem; font-weight: 700; border-radius: 10px; padding: 1px 5px;
+}
+
+/* MONUMEN UTAMA "VELARIUM" DI TENGAH DENGAN WARNA EMAS MENYALA */
+.main-sanctum { flex: 1; max-width: 1240px; width: 100%; margin: 0 auto; padding: 32px 16px; }
+
+.monument-hero {
+  text-align: center;
+  padding: 36px 12px 20px;
+  margin-bottom: 28px;
+}
+
+.sacred-crest {
+  font-size: 1rem;
+  letter-spacing: 12px;
+  color: var(--gold-primary);
+  margin-bottom: 12px;
+}
+
+.grand-monument-title {
+  font-family: var(--font-display);
+  font-size: 3.8rem;
+  font-weight: 900;
+  letter-spacing: 14px;
+  background: linear-gradient(180deg, #ffffff 15%, var(--gold-highlight) 45%, var(--gold-primary) 75%, var(--gold-deep) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* Glow emas berlapis agar menonjol dari latar belakang hijau zamrud */
+  filter: drop-shadow(0 0 20px rgba(230, 195, 92, 0.6)) drop-shadow(0 4px 10px rgba(0,0,0,0.9));
+  line-height: 1.05;
+  margin-bottom: 8px;
+}
+
+.grand-monument-subtitle {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  letter-spacing: 6px;
+  color: var(--silver-frost);
+  text-transform: uppercase;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 14px;
+}
+
+.grand-monument-desc {
+  max-width: 680px;
+  margin: 0 auto 28px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* GENRE BAR */
+.genre-navigator-box {
+  background: var(--bg-surface); border: 1px solid var(--border-gold);
+  border-radius: 14px; padding: 16px 20px; max-width: 820px; margin: 0 auto;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+.genre-nav-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
+.nav-guide-title { font-size: 0.75rem; color: var(--gold-primary); letter-spacing: 2px; font-weight: 700; }
+.btn-oracle-launch {
+  background: rgba(230, 195, 92, 0.15); border: 1px solid var(--border-gold);
+  color: var(--gold-primary); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer;
+}
+.btn-oracle-launch:hover { background: var(--gold-primary); color: #000; }
+.genre-pills-wrap { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.genre-pill {
+  background: var(--bg-panel); border: 1px solid var(--border-subtle); color: var(--silver-frost);
+  padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;
+}
+.genre-pill.active, .genre-pill:hover { background: var(--gold-primary); color: #000; font-weight: 700; border-color: var(--gold-primary); }
+
+/* PETA RASI LANGSUNG DI HALAMAN DEPAN */
+.home-rasi-section {
+  background: radial-gradient(circle at center, rgba(14, 28, 24, 0.92) 0%, rgba(6, 14, 20, 0.98) 100%);
+  border: 1px solid var(--border-gold);
+  border-radius: 14px;
+  margin-bottom: 40px;
+  overflow: hidden;
+  box-shadow: 0 0 35px rgba(230, 195, 92, 0.15);
+  position: relative;
+}
+
+.rasi-section-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 20px; background: var(--bg-panel); border-bottom: 1px solid var(--border-subtle);
+}
+.rasi-title-group { display: flex; align-items: center; gap: 10px; }
+.rasi-sigil { color: var(--gold-primary); font-size: 1.1rem; }
+.rasi-heading-text { font-family: var(--font-display); font-size: 1.1rem; color: #fff; }
+.rasi-section-header p { font-size: 0.75rem; color: var(--silver-frost); }
+.btn-mini-gold { background: var(--gold-primary); color: #000; border: none; font-size: 0.75rem; font-weight: 700; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+
+.canvas-container-home {
+  position: relative;
+  width: 100%;
+  height: 480px; /* Kanvas tinggi di halaman depan */
+  overflow: hidden;
+  background: #020708;
+}
+#canvas-rasi { width: 100%; height: 100%; display: block; cursor: grab; }
+
+.rasi-home-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 20px; background: var(--bg-panel); border-top: 1px solid var(--border-subtle);
+  font-size: 0.75rem; color: var(--silver-frost); flex-wrap: wrap; gap: 8px;
+}
+</style>
+</head>
+<body>
+<div id="app" class="velarium-root">
+  
+  <!-- Bilah Navigasi Atas Ramping -->
+  <header class="top-nav">
+    <div class="nav-left-anchor">
+      <span class="celestial-sigil-mini">✧</span>
+      <span id="user-role-badge" class="badge-role-guest">Penjelajah (Tamu)</span>
+    </div>
+    
+    <nav class="nav-cluster">
+      <button id="btn-oracle-toggle" class="nav-chip" title="Bilik Konseling Batin">
+        <span class="chip-icon">🔮</span>
+        <span class="chip-text">Konseling Mood</span>
+      </button>
+      <button id="btn-salon-toggle" class="nav-chip" title="The Grand Salon">
+        <span class="chip-icon">🏛</span>
+        <span class="chip-text">The Grand Salon</span>
+      </button>
+      <button id="btn-bank-ide" class="nav-chip" title="Usulkan Premis">
+        <span class="chip-icon">💡</span>
+        <span class="chip-text">Bank Ide</span>
+      </button>
+      <button id="btn-evaluasi" class="nav-chip" title="Evaluasi Platform">
+        <span class="chip-icon">⚖</span>
+        <span class="chip-text">Evaluasi</span>
+      </button>
+      <button id="btn-codex" class="nav-chip" title="Warta Kuratorial">
+        <span class="chip-icon">📜</span>
+        <span class="chip-text">Codex</span>
+      </button>
+      
+      <button id="btn-auth-entry" class="nav-chip auth-btn">
+        <span class="chip-icon">🗝</span>
+        <span id="auth-btn-label">Masuk / Daftar</span>
+      </button>
+
+      <button id="btn-notif-toggle" class="icon-circle" aria-label="Warta Terkini">
+        <span>🔔</span>
+        <span id="notif-badge" class="badge-count">0</span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Notifikasi Popover -->
+  <aside id="notif-popover" class="popover-panel hidden">
+    <div class="popover-header">
+      <h4>Warta Semesta</h4>
+      <span class="popover-sub">Terkini</span>
+    </div>
+    <div id="notif-list" class="popover-body scrollable">
+      <div class="empty-text">Menyerap denyut semesta...</div>
+    </div>
+  </aside>
+
+  <!-- Panggung Utama Beranda -->
+  <main class="main-sanctum">
+    
+    <!-- MONUMEN UTAMA "VELARIUM" DI TENGAH BERANDA -->
+    <section class="monument-hero">
+      <div class="sacred-crest">✦ ❖ ✦</div>
+      <h1 class="grand-monument-title">VELARIUM</h1>
+      <span class="grand-monument-subtitle">SANCTUM LITERATURA • KUBAT SEMESTA NAUNGAN KATA</span>
+      <p class="grand-monument-desc">
+        Kubah arsip manuskrip sastra naratif, resonansi spektrum genre, serta peta rasi konstelasi semesta.
+      </p>
+
+      <!-- Navigasi Genre Otomatis dari Spreadsheet & Tombol Konseling -->
+      <div class="genre-navigator-box">
+        <div class="genre-nav-header">
+          <span class="nav-guide-title">RESONANSI GENRE TERDAFTAR</span>
+          <button id="btn-start-oracle" class="btn-oracle-launch">🔮 Buka Konseling Batin</button>
+        </div>
+        
+        <div class="genre-pills-wrap" id="genre-selector-bar">
+          <button class="genre-pill active" data-genre="all">Semua Koleksi</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== PETA RASI LANGSUNG DI HALAMAN DEPAN ==================== -->
+    <section class="home-rasi-section">
+      <div class="rasi-section-header">
+        <div class="rasi-title-group">
+          <span class="rasi-sigil">✧ ✦ ✧</span>
+          <div>
+            <h3 class="rasi-heading-text">Peta Rasi Semesta Manuskrip</h3>
+            <p id="rasi-status-desc">Ukuran bintang mencerminkan volume audiens (Views). Warna mencerminkan genre spektral.</p>
+          </div>
+        </div>
+        <button id="btn-reset-rasi-filter" class="btn-mini-gold hidden">Pusatkan Ulang Rasi ⟲</button>
+      </div>
+
+      <div class="canvas-container-home">
+        <canvas id="canvas-rasi"></canvas>
+        
+        <!-- Kartu Fokus Mengambang Saat Bintang Diklik -->
+        <div id="rasi-focus-card" class="rasi-focus-card hidden">
+          <div class="focus-cover-wrap">
+            <img id="focus-cover" src="" alt="Cover Naskah" />
+          </div>
+          <div class="focus-details">
+            <div class="focus-badge-row">
+              <span id="focus-type" class="focus-badge highlight">Format: Novel</span>
+              <span id="focus-genre" class="focus-badge gold">Genre</span>
+              <span id="focus-audiens" class="focus-badge">👁 0 Pembaca</span>
+              <span id="focus-rating" class="focus-badge">★ 5.0</span>
+            </div>
+            <h4 id="focus-title">Judul Karya</h4>
+            <span id="focus-author" class="focus-author">Penulis</span>
+            <p id="focus-synopsis" class="focus-synopsis">Sinopsis singkat naskah...</p>
+            <div class="focus-actions">
+              <div class="action-btn-group">
+                <button id="btn-focus-read" class="btn-enter-reader">Buka Naskah</button>
+                <button id="btn-focus-recenter" class="btn-orbit-center" title="Pusatkan Rasi ke Karya Ini">Pusatkan Orbit ⟲</button>
+              </div>
+              <span id="focus-relation-text" class="focus-relation">Simpul Utama</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rasi-home-footer">
+        <div class="spectrum-legend">
+          <span class="legend-item"><span class="dot-spec dot-gold"></span> Gotik/Arsip</span>
+          <span class="legend-item"><span class="dot-spec dot-azure"></span> Surealis/Psikologi</span>
+          <span class="legend-item"><span class="dot-spec dot-crimson"></span> Teater/Misteri</span>
+          <span class="legend-item"><span class="dot-spec dot-emerald"></span> Katarsis/Hening</span>
+        </div>
+        <small class="touch-hint">Sentuh simpul bintang untuk melihat kartu karya lengkap.</small>
+      </div>
+    </section>
+
+    <!-- Galeri Daftar Karya Bawah -->
+    <section class="gallery-chamber">
+      <h3 class="chamber-title">Daftar Manuskrip Terbit</h3>
+      <div id="katalog-grid" class="katalog-grid">
+        <div class="sanctum-loader">
+          <div class="celestial-orbit"></div>
+          <p>Membuka lembar Katalog_Karya dari database...</p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <!-- ==================== MODAL AKUN & 3 TINGKATAN AKSES ==================== -->
+  <div id="modal-auth" class="veil-modal hidden">
+    <div class="veil-card sm">
+      <header class="veil-head">
+        <h4 id="auth-modal-title">Gerbang Masuk Sanctum</h4>
+        <button id="btn-close-auth" class="btn-close-x">✕</button>
+      </header>
+      
+      <div class="auth-role-tabs">
+        <button id="tab-auth-login" class="auth-tab-btn active">Masuk Akun</button>
+        <button id="tab-auth-register" class="auth-tab-btn">Daftar Akun</button>
+        <button id="tab-auth-owner" class="auth-tab-btn owner">Pembuat Web</button>
+      </div>
+
+      <form id="form-auth-login" class="veil-form">
+        <div class="form-row">
+          <label>User ID / Nama Akun</label>
+          <input type="text" id="login-user-id" placeholder="Ketik User ID Anda..." required />
+        </div>
+        <div class="form-row">
+          <label>Kata Sandi</label>
+          <div class="password-field-wrap">
+            <input type="password" id="login-password" placeholder="Ketik kata sandi..." required />
+            <button type="button" class="btn-eye" onclick="togglePassVisibility('login-password', this)">👁</button>
+          </div>
+        </div>
+        <button type="submit" class="btn-gold-action full">Masuk ke Ruang Akses Penuh</button>
+      </form>
+
+      <form id="form-auth-register" class="veil-form hidden">
+        <div class="form-row">
+          <label>Tentukan User ID Baru</label>
+          <input type="text" id="reg-user-id" placeholder="Pilih nama User ID..." required />
+        </div>
+        <div class="form-row">
+          <label>Tentukan Kata Sandi</label>
+          <div class="password-field-wrap">
+            <input type="password" id="reg-password" placeholder="Tentukan kata sandi kuat..." required />
+            <button type="button" class="btn-eye" onclick="togglePassVisibility('reg-password', this)">👁</button>
+          </div>
+        </div>
+        <button type="submit" class="btn-gold-action full">Daftarkan Akun Sanctum</button>
+      </form>
+
+      <form id="form-auth-owner" class="veil-form hidden">
+        <p class="form-note">Akses privat pemilik platform untuk inspeksi database mentah dan kurasi.</p>
+        <div class="form-row">
+          <label>Kunci Rahasia Pembuat Web</label>
+          <div class="password-field-wrap">
+            <input type="password" id="owner-secret-key" placeholder="Ketik kunci rahasia..." required />
+            <button type="button" class="btn-eye" onclick="togglePassVisibility('owner-secret-key', this)">👁</button>
+          </div>
+        </div>
+        <button type="submit" class="btn-gold-action full">Buka Gerbang Pembuat Web</button>
+      </form>
+
+      <div id="panel-profile-manage" class="veil-form hidden">
+        <span class="badge-role-member">Akun Sanctum Aktif</span>
+        <p id="profile-current-name" style="font-size:0.9rem; color:#fff; font-weight:700; margin:6px 0;">User: Penjelajah</p>
+        
+        <div class="form-row">
+          <label>Ubah User ID</label>
+          <input type="text" id="change-user-id" placeholder="Nama User ID baru..." />
+        </div>
+        <div class="form-row">
+          <label>Ubah Kata Sandi</label>
+          <div class="password-field-wrap">
+            <input type="password" id="change-password" placeholder="Kata sandi baru..." />
+            <button type="button" class="btn-eye" onclick="togglePassVisibility('change-password', this)">👁</button>
+          </div>
+        </div>
+        <div class="action-btn-group">
+          <button id="btn-save-credentials" class="btn-gold-action">Simpan Perubahan</button>
+          <button id="btn-logout" class="btn-orbit-center" style="color:#f87171;">Keluar Akun</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD KHUSUS PEMBUAT WEB (LEVEL 3) -->
+  <div id="modal-owner-dashboard" class="veil-modal hidden">
+    <div class="veil-card">
+      <header class="veil-head">
+        <h4>Arsitek Platform • Panel Pembuat Web</h4>
+        <button id="btn-close-owner-dash" class="btn-close-x">✕</button>
+      </header>
+      <div class="kurator-dashboard">
+        <div class="dashboard-header">
+          <span class="badge-gold">Otoritas Tertinggi Aktif</span>
+          <p style="font-size:0.8rem; color:#9da6b9; margin-top:4px;">
+            Memantau data mentah, moderasi Bank Ide, evaluasi, dan pembersihan cache latar belakang.
+          </p>
+        </div>
+        
+        <div class="kurator-actions-grid">
+          <button id="btn-owner-get-ide" class="dashboard-btn">Tinjau Bank Ide Cerita</button>
+          <button id="btn-owner-get-eval" class="dashboard-btn">Tinjau Evaluasi Pengguna</button>
+          <button id="btn-owner-purge-cache" class="dashboard-btn" style="border-color:#f59e0b;">Bersihkan Cache Server</button>
+        </div>
+        
+        <div id="owner-data-view" class="kurator-table-view scrollable">
+          <p class="empty-text">Pilih salah satu fungsi kurator di atas untuk memuat data mentah.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: KONSELING JIWA (SOUL ORACLE) -->
+  <div id="modal-oracle" class="veil-modal hidden">
+    <div class="veil-card sm oracle-card">
+      <header class="veil-head">
+        <h4>Bilik Konseling Batin</h4>
+        <button id="btn-close-oracle" class="btn-close-x">✕</button>
+      </header>
+      <div class="oracle-body" id="oracle-step-container">
+        <p class="oracle-question" id="oracle-q-text">Bagaimana suasana batinmu saat memijak gerbang ini?</p>
+        <div class="oracle-options" id="oracle-options-box"></div>
+      </div>
+      <div class="oracle-progress">
+        <div id="oracle-bar" class="oracle-bar-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEMBAR BACA MANUSKRIP -->
+  <div id="modal-reader" class="reader-stage hidden">
+    <div class="reader-sanctuary">
+      <header class="reader-masthead">
+        <div class="reader-meta-group">
+          <span class="seal-icon">✦</span>
+          <div>
+            <h3 id="reader-title" class="reader-title">Memuat Naskah...</h3>
+            <span id="reader-author" class="reader-author">Penulis</span>
+          </div>
+        </div>
+        <div class="reader-controls">
+          <button id="btn-audio-drone" class="audio-chip" title="Nyalakan Suasana Teater">
+            <span class="audio-dot"></span>
+            <span id="audio-label">Nyalakan Suasana</span>
+          </button>
+          <div class="font-zoom-ctrl">
+            <button id="btn-font-sub" title="Perkecil Teks">A-</button>
+            <button id="btn-font-add" title="Perbesar Teks">A+</button>
+          </div>
+          <button id="btn-close-reader" class="btn-quit">✕ Tutup</button>
+        </div>
+      </header>
+
+      <nav id="reader-chapter-strip" class="chapter-strip scrollable-x"></nav>
+
+      <div class="reader-arena">
+        <article id="reader-viewport" class="manuscript-canvas font-md">
+          <div class="sanctum-loader">
+            <div class="celestial-orbit"></div>
+            <p>Memuat bab Google Dokumen resmi...</p>
+          </div>
+        </article>
+
+        <aside class="sidebar-alcove">
+          <div class="alcove-tabs">
+            <button id="tab-lexicon" class="tab-btn active">Celestial Lexicon</button>
+            <button id="tab-suasana" class="tab-btn">Atmosfer Teater</button>
+          </div>
+          <div id="alcove-lexicon-content" class="alcove-body scrollable">
+            <div id="lexicon-entries" class="entries-list">
+              <p class="empty-text">Memuat leksikon dunia karya...</p>
+            </div>
+          </div>
+          <div id="alcove-suasana-content" class="alcove-body hidden">
+            <div class="suasana-card">
+              <h5 id="panggung-nama">Bilik Diskusi</h5>
+              <p id="panggung-suasana" class="suasana-text">Hening beludru dengan gema samar senar teater.</p>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <footer class="reader-dock">
+        <div class="dock-primary">
+          <div class="resonance-gauge">
+            <span class="gauge-label">Resonansi Bintang:</span>
+            <div id="star-meter" class="star-meter">
+              <span data-v="1">★</span>
+              <span data-v="2">★</span>
+              <span data-v="3">★</span>
+              <span data-v="4">★</span>
+              <span data-v="5">★</span>
+            </div>
+            <span id="numeric-rating-val" class="gauge-num">5.0</span>
+          </div>
+
+          <div class="dock-actions">
+            <button id="btn-open-mood" class="dock-btn">🎭 Rekam Mood</button>
+            <button id="btn-save-vault" class="dock-btn">⚜ Simpan ke Vault</button>
+            <button id="btn-gift-vip" class="dock-btn gold">🎁 Apresiasi VIP</button>
+            <button id="btn-toggle-komentar" class="dock-btn active">💬 Komentar (<span id="count-komentar">0</span>)</button>
+          </div>
+        </div>
+
+        <div id="drawer-komentar" class="komentar-chamber">
+          <div class="komentar-editor">
+            <input type="text" id="komentar-penulis" placeholder="Nama Penjelajah..." maxlength="35" />
+            <textarea id="komentar-teks" placeholder="Tuliskan impresi atau tafsir adegan..." rows="2"></textarea>
+            <button id="btn-kirim-komentar" class="btn-gold-action">Kirim Resonansi</button>
+          </div>
+          <div id="stream-komentar" class="komentar-stream scrollable">
+            <div class="empty-text">Belum ada tanggapan. Mulailah dialog pertama!</div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- THE GRAND SALON -->
+  <aside id="drawer-salon" class="curtain-drawer hidden">
+    <div class="drawer-cap">
+      <div class="cap-title">
+        <span>🏛</span>
+        <div>
+          <h4>The Grand Salon</h4>
+          <span class="live-status"><span class="green-dot"></span> Obrolan Terhubung</span>
+        </div>
+      </div>
+      <button id="btn-close-salon" class="btn-close-x">✕</button>
+    </div>
+    <div id="salon-message-stream" class="chat-viewport scrollable">
+      <div class="empty-text">Menyerap percakapan salon...</div>
+    </div>
+    <form id="form-chat-salon" class="chat-composer">
+      <input type="text" id="salon-input-nama" placeholder="Nama..." maxlength="20" />
+      <input type="text" id="salon-input-pesan" placeholder="Sampaikan gagasan filosofis atau impresi..." required />
+      <button type="submit" class="btn-gold-send">➤</button>
+    </form>
+  </aside>
+
+  <!-- FOUNDERS CODEX -->
+  <aside id="drawer-codex" class="curtain-drawer left-align hidden">
+    <div class="drawer-cap">
+      <div class="cap-title">
+        <span>📜</span>
+        <div>
+          <h4>Founders Codex</h4>
+          <span class="live-status">Warta Dewan Kurator</span>
+        </div>
+      </div>
+      <button id="btn-close-codex" class="btn-close-x">✕</button>
+    </div>
+    <div id="codex-stream" class="chat-viewport scrollable">
+      <div class="empty-text">Membuka lembaran codex...</div>
+    </div>
+  </aside>
+
+  <!-- BANK IDE KARYA -->
+  <div id="modal-bank-ide" class="veil-modal hidden">
+    <div class="veil-card">
+      <header class="veil-head">
+        <h4>Usulkan Benih Ide Cerita Baru</h4>
+        <button id="btn-close-bank-ide" class="btn-close-x">✕</button>
+      </header>
+      <form id="form-bank-ide" class="veil-form">
+        <div class="form-row">
+          <label>Nama Pengusul</label>
+          <input type="text" id="ide-nama" placeholder="Contoh: Pengelana Rawa" required />
+        </div>
+        <div class="form-row">
+          <label>Kategori Tema Cerita</label>
+          <input type="text" id="ide-kategori" placeholder="Gotik, Chrono-Spatial, Distorsi Memori..." required />
+        </div>
+        <div class="form-row">
+          <label>Premis & Konsep Utama</label>
+          <textarea id="ide-premis" rows="3" placeholder="Gambarkan benturan nasib, rahasia, dan misteri..." required></textarea>
+        </div>
+        <div class="form-row">
+          <label>Arketipe Tokoh</label>
+          <input type="text" id="ide-arketipe" placeholder="Contoh: Dalang marionet yang mencari bayangannya" />
+        </div>
+        <button type="submit" class="btn-gold-action full">Tanam Benih ke Bank Ide</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- EVALUASI PLATFORM -->
+  <div id="modal-evaluasi" class="veil-modal hidden">
+    <div class="veil-card sm">
+      <header class="veil-head">
+        <h4>Evaluasi Platform Velarium</h4>
+        <button id="btn-close-evaluasi" class="btn-close-x">✕</button>
+      </header>
+      <form id="form-evaluasi" class="veil-form">
+        <div class="form-row">
+          <label>Nama Anda / Penjelajah</label>
+          <input type="text" id="eval-nama" placeholder="Anonim / Nama Pena..." />
+        </div>
+        <div class="form-row">
+          <label>Peran Pengguna</label>
+          <input type="text" id="eval-peran" placeholder="Pembaca / Pengulas / Penulis..." />
+        </div>
+        <div class="form-row">
+          <label>Aspek Evaluasi</label>
+          <input type="text" id="eval-aspek" placeholder="Antarmuka, Pembaca Naskah, Tipografi..." />
+        </div>
+        <div class="form-row">
+          <label>Nilai Kepuasan (1 - 5)</label>
+          <input type="number" id="eval-nilai" min="1" max="5" value="5" required />
+        </div>
+        <div class="form-row">
+          <label>Pesan & Saran Pengembangan</label>
+          <textarea id="eval-pesan" rows="3" placeholder="Tuliskan saran penyempurnaan..." required></textarea>
+        </div>
+        <button type="submit" class="btn-gold-action full">Kirim Evaluasi</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- JEJAK MOOD -->
+  <div id="modal-mood" class="veil-modal hidden">
+    <div class="veil-card sm">
+      <header class="veil-head">
+        <h4>Abadikan Jejak Mood</h4>
+        <button id="btn-close-mood" class="btn-close-x">✕</button>
+      </header>
+      <form id="form-mood" class="veil-form">
+        <div class="form-row">
+          <label>Kesan Suasana Hati yang Dirasakan</label>
+          <input type="text" id="mood-kesan" placeholder="Tersihir, Melankolis, Hening, Bergetar..." required />
+        </div>
+        <div class="form-row">
+          <label>Naskah Ini Paling Pas Dibaca Saat?</label>
+          <input type="text" id="mood-waktu" placeholder="Malam sunyi saat hujan lebat..." required />
+        </div>
+        <button type="submit" class="btn-gold-action full">Simpan Jejak Mood</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- GILDED VAULT -->
+  <div id="modal-vault" class="veil-modal hidden">
+    <div class="veil-card sm">
+      <header class="veil-head">
+        <h4>Gilded Vault • Simpan Kutipan</h4>
+        <button id="btn-close-vault" class="btn-close-x">✕</button>
+      </header>
+      <form id="form-vault" class="veil-form">
+        <div class="form-row">
+          <label>Teks Kutipan Kalimat Indah</label>
+          <textarea id="vault-teks" rows="3" placeholder="Salin kutipan kalimat magis dari naskah..." required></textarea>
+        </div>
+        <button type="submit" class="btn-gold-action full">Kunci ke Vault Abadi</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- GIFT REGISTRY -->
+  <div id="modal-gift" class="veil-modal hidden">
+    <div class="veil-card sm">
+      <header class="veil-head">
+        <h4>Apresiasi Hadiah & Akses VIP</h4>
+        <button id="btn-close-gift" class="btn-close-x">✕</button>
+      </header>
+      <form id="form-gift" class="veil-form">
+        <p class="form-note">Permintaan hadiah dicatat ke Gift Registry untuk diverifikasi Kurator.</p>
+        <div class="form-row">
+          <label>Email Pengirim</label>
+          <input type="email" id="gift-sender" placeholder="emailmu@domain.com" required />
+        </div>
+        <div class="form-row">
+          <label>Email Penerima Berkas VIP</label>
+          <input type="email" id="gift-receiver" placeholder="penerima@domain.com" required />
+        </div>
+        <button type="submit" class="btn-gold-action full">Kirim Permintaan VIP</button>
+      </form>
+    </div>
+  </div>
+
+</div>
+<script>
+const BACKEND_URL = "https://script.google.com/macros/s/AKfycbwuVYK_obpzePMHkpT2gs2eLTaFEN3vv8grQpJ7V91nAgin-6iQvD77oJP-cfm_iV3mDA/exec";
+
+let allWorks = [];
+let filteredWorks = [];
+let currentKarya = null;
+let currentChapters = [];
+let selectedGenre = "all";
+
+// Level 1: "guest" (Tamu) | Level 2: "member" | Level 3: "owner"
+let currentUser = {
+  role: "guest",
+  userId: "Penjelajah",
+  password: ""
+};
+let ownerCuratorToken = "";
+
+function initAuthSystem() {
+  const savedUser = localStorage.getItem("velarium_auth_user");
+  if (savedUser) {
+    try { currentUser = JSON.parse(savedUser); } catch(e) {}
+  }
+  perbaruiBadgePeranUI();
+
+  const modalAuth = document.getElementById("modal-auth");
+  const btnEntry = document.getElementById("btn-auth-entry");
+  const btnClose = document.getElementById("btn-close-auth");
+
+  btnEntry.addEventListener("click", () => {
+    modalAuth.classList.remove("hidden");
+    if (currentUser.role === "member") tampilkanKelolaProfil();
+    else aktifkanTabAuth("login");
+  });
+
+  btnClose.addEventListener("click", () => modalAuth.classList.add("hidden"));
+
+  document.getElementById("tab-auth-login").addEventListener("click", () => aktifkanTabAuth("login"));
+  document.getElementById("tab-auth-register").addEventListener("click", () => aktifkanTabAuth("register"));
+  document.getElementById("tab-auth-owner").addEventListener("click", () => aktifkanTabAuth("owner"));
+
+  document.getElementById("form-auth-login").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const uid = document.getElementById("login-user-id").value.trim();
+    const pass = document.getElementById("login-password").value.trim();
+    if (!uid || !pass) return;
+
+    currentUser = { role: "member", userId: uid, password: pass };
+    localStorage.setItem("member_account_" + uid.toLowerCase(), JSON.stringify(currentUser));
+    simpanSesiUser();
+    modalAuth.classList.add("hidden");
+    alert(`Selamat datang kembali di Sanctum, ${currentUser.userId}! Seluruh fitur interaktif terbuka.`);
+  });
+
+  document.getElementById("form-auth-register").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const uid = document.getElementById("reg-user-id").value.trim();
+    const pass = document.getElementById("reg-password").value.trim();
+    if (!uid || !pass) return;
+
+    currentUser = { role: "member", userId: uid, password: pass };
+    localStorage.setItem("member_account_" + uid.toLowerCase(), JSON.stringify(currentUser));
+    simpanSesiUser();
+    modalAuth.classList.add("hidden");
+    alert(`Pendaftaran sukses! Selamat datang, ${currentUser.userId}.`);
+  });
+
+  document.getElementById("form-auth-owner").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const key = document.getElementById("owner-secret-key").value.trim();
+    if (!key) return;
+
+    try {
+      const res = await fetch(BACKEND_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "login_kurator", sandi: key })
+      });
+      const data = await res.json();
+      if (data.status === "success" && data.token) {
+        ownerCuratorToken = data.token;
+        currentUser = { role: "owner", userId: "Arsitek Velarium", password: key };
+        simpanSesiUser();
+        modalAuth.classList.add("hidden");
+        alert("Otoritas Pembuat Web diterima.");
+        bukaPanelPembuatWeb();
+      } else {
+        alert(data.message || "Kunci Pembuat Web tidak sah.");
+      }
+    } catch(err) {
+      alert("Gagal memverifikasi ke server kurator.");
+    }
+  });
+
+  document.getElementById("btn-save-credentials").addEventListener("click", () => {
+    const newUid = document.getElementById("change-user-id").value.trim();
+    const newPass = document.getElementById("change-password").value.trim();
+    if (newUid) currentUser.userId = newUid;
+    if (newPass) currentUser.password = newPass;
+
+    simpanSesiUser();
+    localStorage.setItem("member_account_" + currentUser.userId.toLowerCase(), JSON.stringify(currentUser));
+    alert("Kredensial akun berhasil diperbarui!");
+    tampilkanKelolaProfil();
+  });
+
+  document.getElementById("btn-logout").addEventListener("click", () => {
+    currentUser = { role: "guest", userId: "Penjelajah", password: "" };
+    ownerCuratorToken = "";
+    localStorage.removeItem("velarium_auth_user");
+    perbaruiBadgePeranUI();
+    modalAuth.classList.add("hidden");
+    alert("Anda telah kembali ke status Penjelajah (Tamu).");
+  });
+}
+
+function aktifkanTabAuth(tab) {
+  document.getElementById("form-auth-login").classList.toggle("hidden", tab !== "login");
+  document.getElementById("form-auth-register").classList.toggle("hidden", tab !== "register");
+  document.getElementById("form-auth-owner").classList.toggle("hidden", tab !== "owner");
+  document.getElementById("panel-profile-manage").classList.add("hidden");
+
+  document.getElementById("tab-auth-login").classList.toggle("active", tab === "login");
+  document.getElementById("tab-auth-register").classList.toggle("active", tab === "register");
+  document.getElementById("tab-auth-owner").classList.toggle("active", tab === "owner");
+}
+
+function tampilkanKelolaProfil() {
+  document.getElementById("form-auth-login").classList.add("hidden");
+  document.getElementById("form-auth-register").classList.add("hidden");
+  document.getElementById("form-auth-owner").classList.add("hidden");
+  document.getElementById("panel-profile-manage").classList.remove("hidden");
+
+  document.getElementById("profile-current-name").textContent = `ID Akun: ${currentUser.userId} (${currentUser.role.toUpperCase()})`;
+  document.getElementById("change-user-id").value = currentUser.userId;
+  document.getElementById("change-password").value = currentUser.password;
+}
+
+function simpanSesiUser() {
+  localStorage.setItem("velarium_auth_user", JSON.stringify(currentUser));
+  perbaruiBadgePeranUI();
+}
+
+function perbaruiBadgePeranUI() {
+  const badge = document.getElementById("user-role-badge");
+  const authLabel = document.getElementById("auth-btn-label");
+
+  if (currentUser.role === "owner") {
+    badge.className = "badge-role-owner";
+    badge.textContent = `⚜ Arsitek Web`;
+    authLabel.textContent = "Panel Arsitek";
+  } else if (currentUser.role === "member") {
+    badge.className = "badge-role-member";
+    badge.textContent = `✦ ${currentUser.userId}`;
+    authLabel.textContent = "Profil Akun";
+  } else {
+    badge.className = "badge-role-guest";
+    badge.textContent = "Penjelajah (Tamu)";
+    authLabel.textContent = "Masuk / Daftar";
+  }
+}
+
+function pastikanBukanTamu(namaFitur) {
+  if (currentUser.role === "guest") {
+    alert(`Fitur [${namaFitur}] memerlukan akun Sanctum. Silakan Masuk atau Daftar melalui tombol di kanan atas.`);
+    document.getElementById("modal-auth").classList.remove("hidden");
+    aktifkanTabAuth("login");
+    return false;
+  }
+  return true;
+}
+
+function togglePassVisibility(inputId, btn) {
+  const inp = document.getElementById(inputId);
+  if (inp.type === "password") {
+    inp.type = "text";
+    btn.textContent = "🔒";
+  } else {
+    inp.type = "password";
+    btn.textContent = "👁";
+  }
+}
+
+// ==================== AUDIO TEATER ====================
+let audioCtx = null;
+let isAudioPlaying = false;
+let osc1 = null;
+let osc2 = null;
+let gainNode = null;
+
+function toggleTheaterAudio() {
+  const btn = document.getElementById("btn-audio-drone");
+  const label = document.getElementById("audio-label");
+  if (!isAudioPlaying) {
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!audioCtx) audioCtx = new AudioContext();
+      if (audioCtx.state === "suspended") audioCtx.resume();
+
+      osc1 = audioCtx.createOscillator();
+      osc2 = audioCtx.createOscillator();
+      gainNode = audioCtx.createGain();
+
+      osc1.type = "sine";
+      osc1.frequency.setValueAtTime(55, audioCtx.currentTime);
+      osc2.type = "triangle";
+      osc2.frequency.setValueAtTime(110, audioCtx.currentTime);
+
+      gainNode.gain.setValueAtTime(0.06, audioCtx.currentTime);
+      osc1.connect(gainNode);
+      osc2.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+
+      osc1.start();
+      osc2.start();
+      isAudioPlaying = true;
+      btn.classList.add("active");
+      label.textContent = "Heningkan";
+    } catch (e) {
+      alert("Audio tidak didukung.");
+    }
+  } else {
+    stopTheaterAudio();
+    btn.classList.remove("active");
+    label.textContent = "Nyalakan Suasana";
+  }
+}
+
+function stopTheaterAudio() {
+  if (isAudioPlaying && osc1 && osc2) {
+    try {
+      osc1.stop();
+      osc2.stop();
+      osc1.disconnect();
+      osc2.disconnect();
+    } catch (e) {}
+    isAudioPlaying = false;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  initAuthSystem();
+  muatKatalog();
+  muatNotifikasi();
+  pasangEventNavigasi();
+  pasangEventReader();
+  pasangEventFormulir();
+  pasangEventKonselingBatin();
+  initRasiEngine();
+});
+/* ==================== KATALOG & PENYUSUN GENRE DINAMIS ==================== */
+async function muatKatalog() {
+  const grid = document.getElementById("katalog-grid");
+  try {
+    const res = await fetch(`${BACKEND_URL}?action=katalog`);
+    const data = await res.json();
+    
+    // Normalisasi data jika kolom di spreadsheet ada spasi atau variasi huruf
+    if (Array.isArray(data) && data.length > 0) {
+      allWorks = data.map(k => ({
+        ID_Karya: k.ID_Karya || k.id_karya || k.ID || "",
+        Judul: k.Judul || k.Judul_Karya || "Karya Tanpa Judul",
+        Tipe: k.Tipe || k.Format || "Manuskrip",
+        Penulis: k.Penulis || "Kurator Velarium",
+        Genre_Utama: k.Genre_Utama || k.Genre || "",
+        Genre_Lain: k.Genre_Lain || "",
+        Sinopsis_Singkat: k.Sinopsis_Singkat || k.Sinopsis || "Selami lembaran karya untuk merasakan resonansi kisah...",
+        Cover_URL: k.Cover_URL || "",
+        ID_Dokumen_Gratis: k.ID_Dokumen_Gratis || "",
+        Total_Views: parseInt(k.Total_Views) || 0,
+        Rating_Rata2: k.Rating_Rata2 || "5.0"
+      }));
+    } else {
+      allWorks = [];
+    }
+
+    if (allWorks.length === 0) {
+      grid.innerHTML = `<div class="empty-text">Katalog_Karya masih kosong di spreadsheet. Pastikan baris data sudah terisi di bawah header.</div>`;
+      return;
+    }
+
+    filteredWorks = [...allWorks];
+    renderCatalogCards(filteredWorks);
+    bangunTombolGenreOtomatis();
+    
+    // Bangun rasi bintang langsung di halaman depan begitu data termuat
+    resizeRasiCanvas();
+    bangunSimpulRasiBercabang(allWorks, "Simpul Utama Semesta");
+    startRasiAnimation();
+  } catch (err) {
+    grid.innerHTML = `<div class="empty-text" style="color:#ef4444;">Gagal menyerap katalog: ${err.message}</div>`;
+  }
+}
+
+function bangunTombolGenreOtomatis() {
+  const container = document.getElementById("genre-selector-bar");
+  const genreSet = new Set();
+
+  allWorks.forEach(w => {
+    if (w.Genre_Utama && w.Genre_Utama.trim()) genreSet.add(w.Genre_Utama.trim());
+    if (w.Genre_Lain && w.Genre_Lain.trim()) genreSet.add(w.Genre_Lain.trim());
+  });
+
+  const genreArray = Array.from(genreSet);
+  container.innerHTML = `<button class="genre-pill active" data-genre="all">Semua Koleksi</button>` + 
+    genreArray.map(g => `<button class="genre-pill" data-genre="${g}">${g}</button>`).join("");
+
+  document.querySelectorAll("#genre-selector-bar .genre-pill").forEach(pill => {
+    pill.addEventListener("click", () => {
+      document.querySelectorAll("#genre-selector-bar .genre-pill").forEach(p => p.classList.remove("active"));
+      pill.classList.add("active");
+      selectedGenre = pill.getAttribute("data-genre");
+      terapkanFilterGenre(selectedGenre);
+    });
+  });
+}
+
+function terapkanFilterGenre(targetGenre) {
+  if (targetGenre === "all") {
+    filteredWorks = [...allWorks];
+  } else {
+    filteredWorks = allWorks.filter(w => {
+      return (w.Genre_Utama && w.Genre_Utama.toLowerCase() === targetGenre.toLowerCase()) ||
+             (w.Genre_Lain && w.Genre_Lain.toLowerCase() === targetGenre.toLowerCase());
+    });
+  }
+  renderCatalogCards(filteredWorks);
+  bangunSimpulRasiBercabang(filteredWorks.length > 0 ? filteredWorks : allWorks, `Filter Genre: ${targetGenre}`);
+}
+
+function renderCatalogCards(items) {
+  const grid = document.getElementById("katalog-grid");
+  if (items.length === 0) {
+    grid.innerHTML = `<div class="empty-text">Tidak ada naskah yang terdaftar dalam kategori ini.</div>`;
+    return;
+  }
+  grid.innerHTML = items.map(k => `
+    <article class="karya-card">
+      <div class="card-cover-wrap">
+        <img src="${k.Cover_URL || 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400'}" alt="${k.Judul}" />
+        <span class="card-pill-tag">${k.Tipe}</span>
+        <span class="card-rating-badge">★ ${k.Rating_Rata2}</span>
+      </div>
+      <div class="card-body">
+        <div class="card-genre-row">
+          ${k.Genre_Utama ? `<span class="genre-tag">${k.Genre_Utama}</span>` : ''}
+          ${k.Genre_Lain ? `<span class="genre-tag">${k.Genre_Lain}</span>` : ''}
+        </div>
+        <h4 class="card-title">${k.Judul}</h4>
+        <span class="card-author">${k.Penulis ? 'Karya ' + k.Penulis : 'Kurator Velarium'}</span>
+        <p class="card-synopsis">${k.Sinopsis_Singkat.substring(0, 115)}...</p>
+        <div class="card-footer">
+          <span class="card-views">👁 ${k.Total_Views} Penjelajah</span>
+          <button class="btn-enter-reader" onclick="bukaManuskrip('${k.ID_Karya}')">Buka Naskah</button>
+        </div>
+      </div>
+    </article>
+  `).join("");
+}
+
+/* ==================== KONSELING BATIN (SOUL ORACLE) ==================== */
+const oracleFlow = [
+  {
+    question: "Bagaimana desau batinmu saat melangkah masuk ke sanctum malam ini?",
+    options: [
+      { label: "Terasing, hampa, dan diselimuti melankolia sunyi", moodKey: "melankolis", hint: "hujan lebat, sunyi larut malam" },
+      { label: "Tertarik pada misteri bayangan, boneka kuno, dan rahasia takdir", moodKey: "gotik", hint: "dini hari di sudut teater tua" },
+      { label: "Batin merasa realitas bergeser, mencari distorsi waktu & memori", moodKey: "surealis", hint: "kala terjaga di antara mimpi" },
+      { label: "Mencari keheningan damai dan katarsis untuk melepaskan beban", moodKey: "hening", hint: "kala fajar menyapa hening" }
+    ]
+  },
+  {
+    question: "Gema apa yang paling kamu harapkan dari lembaran naskah yang terbuka?",
+    options: [
+      { label: "Yang merangkul luka jiwaku tanpa banyak menghakimi", moodKey: "melankolis", hint: "kesedihan berbalut keindahan" },
+      { label: "Yang membawaku menyusuri labirin kutukan dan narasi gelap", moodKey: "gotik", hint: "ketegangan gotik estetik" },
+      { label: "Yang membalikkan logika ruang, ingatan, dan kesadaran diri", moodKey: "surealis", hint: "distorsi filosofis" },
+      { label: "Yang mengalir tenang bagaikan air telaga beludru", moodKey: "hening", hint: "katarsis murni" }
+    ]
+  }
+];
+
+let oracleIndex = 0;
+let oracleChosenMood = "";
+
+function pasangEventKonselingBatin() {
+  const modal = document.getElementById("modal-oracle");
+  const open1 = document.getElementById("btn-start-oracle");
+  const open2 = document.getElementById("btn-oracle-toggle");
+  const close = document.getElementById("btn-close-oracle");
+
+  const start = () => {
+    modal.classList.remove("hidden");
+    oracleIndex = 0;
+    tampilkanStepOracle();
+  };
+  open1.addEventListener("click", start);
+  open2.addEventListener("click", start);
+  close.addEventListener("click", () => modal.classList.add("hidden"));
+}
+
+function tampilkanStepOracle() {
+  const stepData = oracleFlow[oracleIndex];
+  document.getElementById("oracle-q-text").textContent = stepData.question;
+  document.getElementById("oracle-bar").style.width = ((oracleIndex + 1) / oracleFlow.length * 100) + "%";
+
+  const container = document.getElementById("oracle-options-box");
+  container.innerHTML = stepData.options.map(opt => `
+    <button class="oracle-btn-option" onclick="pilihOpsiOracle('${opt.moodKey}')">
+      <b>${opt.label}</b>
+      <small style="display:block; font-size:0.75rem; color:#9aa4b8; margin-top:3px;">Cocok dibaca saat: ${opt.hint}</small>
+    </button>
+  `).join("");
+}
+
+function pilihOpsiOracle(moodKey) {
+  oracleChosenMood = moodKey;
+  if (oracleIndex < oracleFlow.length - 1) {
+    oracleIndex++;
+    tampilkanStepOracle();
+  } else {
+    document.getElementById("modal-oracle").classList.add("hidden");
+    saringKaryaBerdasarkanKonseling(oracleChosenMood);
+  }
+}
+
+function saringKaryaBerdasarkanKonseling(moodKey) {
+  filteredWorks = allWorks.filter(w => {
+    const teks = (w.Genre_Utama + " " + w.Genre_Lain + " " + w.Sinopsis_Singkat + " " + w.Judul).toLowerCase();
+    if (moodKey === "melankolis") return /melankol|sunyi|luka|patah|hilang|sedih/i.test(teks);
+    if (moodKey === "gotik") return /gotik|teater|boneka|bayang|gelap|kutuk|misteri/i.test(teks);
+    if (moodKey === "surealis") return /sureal|distorsi|waktu|ruang|ingat|mimpi|batin/i.test(teks);
+    if (moodKey === "hening") return /hening|katarsis|tenang|damai|jiwa|renung/i.test(teks);
+    return true;
+  });
+
+  renderCatalogCards(filteredWorks);
+  document.getElementById("btn-reset-rasi-filter").classList.remove("hidden");
+  document.getElementById("rasi-status-desc").textContent = `Rasi spektrum berakar dari hasil konseling [${moodKey.toUpperCase()}].`;
+  
+  bangunSimpulRasiBercabang(filteredWorks.length > 0 ? filteredWorks : allWorks, `Konseling Batin: ${moodKey}`);
+}
+
+/* ==================== MESIN PETA RASI DI BERANDA ==================== */
+let rasiCanvas = null;
+let rasiCtx = null;
+let rasiNodes = [];
+let rasiBranches = [];
+let animFrameId = null;
+
+function dapatkanWarnaGenre(karya) {
+  const g = ((karya.Genre_Utama || "") + " " + (karya.Genre_Lain || "")).toLowerCase();
+  if (/gotik|teater|bayang|boneka|misteri/.test(g)) {
+    return { main: "#d946ef", glow: "rgba(217, 70, 239, 0.55)", label: "Gotik/Misteri" };
+  }
+  if (/surealis|psikologi|distorsi|waktu|memori|ruang/.test(g)) {
+    return { main: "#38bdf8", glow: "rgba(56, 189, 248, 0.55)", label: "Surealis/Psikologi" };
+  }
+  if (/katarsis|hening|romansa|puisi|tenang/.test(g)) {
+    return { main: "#34d399", glow: "rgba(52, 211, 153, 0.55)", label: "Katarsis/Hening" };
+  }
+  return { main: "#f59e0b", glow: "rgba(245, 158, 11, 0.55)", label: "Arsip Emas" };
+}
+
+function hitungRadiusViews(views) {
+  const v = Math.max(0, parseInt(views) || 0);
+  return Math.min(22, Math.max(7, 7 + Math.log10(v + 1) * 4));
+}
+
+function initRasiEngine() {
+  rasiCanvas = document.getElementById("canvas-rasi");
+  rasiCtx = rasiCanvas.getContext("2d");
+
+  const btnReset = document.getElementById("btn-reset-rasi-filter");
+  btnReset.addEventListener("click", () => {
+    btnReset.classList.add("hidden");
+    document.getElementById("rasi-status-desc").textContent = "Ukuran simpul = Volume Views; Warna = Spektrum Genre.";
+    bangunSimpulRasiBercabang(allWorks, "Simpul Utama Semesta");
+  });
+
+  window.addEventListener("resize", () => {
+    resizeRasiCanvas();
+    if (allWorks.length > 0) bangunSimpulRasiBercabang(allWorks, "Simpul Utama Semesta");
+  });
+
+  rasiCanvas.addEventListener("click", handleRasiCanvasClick);
+  rasiCanvas.addEventListener("touchstart", handleRasiCanvasTouch, { passive: true });
+}
+
+function resizeRasiCanvas() {
+  if (!rasiCanvas) return;
+  const container = rasiCanvas.parentElement;
+  rasiCanvas.width = container.clientWidth;
+  rasiCanvas.height = container.clientHeight;
+}
+
+function bangunSimpulRasiBercabang(workPool, centerReason, manualCenterId = null) {
+  if (!workPool || workPool.length === 0) return;
+  const w = rasiCanvas.width;
+  const h = rasiCanvas.height;
+  const cx = w / 2;
+  const cy = h / 2 - 25;
+
+  document.getElementById("rasi-focus-card").classList.add("hidden");
+  rasiBranches = [];
+  rasiNodes = [];
+
+  let coreWork = null;
+  if (manualCenterId) coreWork = allWorks.find(k => k.ID_Karya === manualCenterId);
+  if (!coreWork) coreWork = [...workPool].sort((a,b) => (parseInt(b.Total_Views)||0) - (parseInt(a.Total_Views)||0))[0];
+
+  const otherWorks = workPool.filter(k => k.ID_Karya !== coreWork.ID_Karya);
+
+  const rootRadius = hitungRadiusViews(coreWork.Total_Views) + 4;
+  const rootColor = dapatkanWarnaGenre(coreWork);
+  const rootNode = {
+    x: cx,
+    y: cy,
+    radius: rootRadius,
+    pulse: 0,
+    isRoot: true,
+    color: rootColor,
+    karya: coreWork
+  };
+  rasiNodes.push(rootNode);
+
+  otherWorks.forEach((karya, idx) => {
+    const total = otherWorks.length;
+    const angle = (idx / total) * Math.PI * 2 + (Math.PI / 6);
+    const dist = Math.min(w, h) * 0.32 + ((idx % 2) * 35);
+    const nodeRadius = hitungRadiusViews(karya.Total_Views);
+    const nodeColor = dapatkanWarnaGenre(karya);
+
+    const node = {
+      x: cx + Math.cos(angle) * dist,
+      y: cy + Math.sin(angle) * dist,
+      radius: nodeRadius,
+      pulse: Math.random() * Math.PI,
+      isRoot: false,
+      color: nodeColor,
+      karya: karya
+    };
+    rasiNodes.push(node);
+    rasiBranches.push({ from: rootNode, to: node, strokeColor: nodeColor.glow });
+  });
+
+  sorotKartuBintang(rootNode, centerReason || "Simpul Pusat Orbit");
+}
+
+function startRasiAnimation() {
+  if (animFrameId) cancelAnimationFrame(animFrameId);
+  function render() {
+    rasiCtx.clearRect(0, 0, rasiCanvas.width, rasiCanvas.height);
+
+    // Garis Benang Cabang
+    rasiBranches.forEach(branch => {
+      rasiCtx.beginPath();
+      rasiCtx.moveTo(branch.from.x, branch.from.y);
+      rasiCtx.lineTo(branch.to.x, branch.to.y);
+      rasiCtx.strokeStyle = branch.strokeColor || "rgba(230, 195, 92, 0.4)";
+      rasiCtx.lineWidth = branch.from.isRoot ? 1.6 : 1;
+      rasiCtx.stroke();
+    });
+
+    // Simpul Bintang Berskala Views
+    rasiNodes.forEach(node => {
+      node.pulse += 0.03;
+      const currentR = node.radius + Math.sin(node.pulse) * 1.5;
+
+      const glow = rasiCtx.createRadialGradient(node.x, node.y, 1, node.x, node.y, currentR * 3.5);
+      glow.addColorStop(0, "#ffffff");
+      glow.addColorStop(0.3, node.color.main);
+      glow.addColorStop(1, "rgba(0, 0, 0, 0)");
+
+      rasiCtx.beginPath();
+      rasiCtx.arc(node.x, node.y, currentR * 3.5, 0, Math.PI * 2);
+      rasiCtx.fillStyle = glow;
+      rasiCtx.fill();
+
+      rasiCtx.beginPath();
+      rasiCtx.arc(node.x, node.y, currentR, 0, Math.PI * 2);
+      rasiCtx.fillStyle = node.color.main;
+      rasiCtx.fill();
+
+      rasiCtx.beginPath();
+      rasiCtx.arc(node.x, node.y, Math.max(2, currentR * 0.35), 0, Math.PI * 2);
+      rasiCtx.fillStyle = "#ffffff";
+      rasiCtx.fill();
+
+      rasiCtx.font = node.isRoot ? "bold 12px 'Plus Jakarta Sans', sans-serif" : "11px 'Plus Jakarta Sans', sans-serif";
+      rasiCtx.fillStyle = "rgba(245, 247, 250, 0.9)";
+      rasiCtx.textAlign = "center";
+      rasiCtx.fillText(node.karya.Judul, node.x, node.y + currentR + 13);
+      
+      rasiCtx.font = "9px 'Plus Jakarta Sans', sans-serif";
+      rasiCtx.fillStyle = node.color.main;
+      rasiCtx.fillText(`👁 ${node.karya.Total_Views} Pembaca`, node.x, node.y + currentR + 25);
+    });
+
+    animFrameId = requestAnimationFrame(render);
+  }
+  render();
+}
+
+function handleRasiCanvasClick(e) {
+  const rect = rasiCanvas.getBoundingClientRect();
+  pilihSimpulBintang(e.clientX - rect.left, e.clientY - rect.top);
+}
+
+function handleRasiCanvasTouch(e) {
+  if (e.touches.length > 0) {
+    const rect = rasiCanvas.getBoundingClientRect();
+    pilihSimpulBintang(e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top);
+  }
+}
+
+function pilihSimpulBintang(x, y) {
+  const clickedNode = rasiNodes.find(n => Math.hypot(n.x - x, n.y - y) < Math.max(22, n.radius * 2));
+  if (clickedNode) {
+    const affinityText = clickedNode.isRoot ? "Simpul Pusat Orbit" : `Spektrum Genre: ${clickedNode.karya.Genre_Utama || 'Sastra'}`;
+    sorotKartuBintang(clickedNode, affinityText);
+  }
+}
+
+function sorotKartuBintang(node, relationLabel) {
+  const card = document.getElementById("rasi-focus-card");
+  card.classList.remove("hidden");
+  
+  document.getElementById("focus-cover").src = node.karya.Cover_URL || 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400';
+  document.getElementById("focus-type").textContent = `Format: ${node.karya.Tipe || 'Manuskrip'}`;
+  document.getElementById("focus-genre").textContent = (node.karya.Genre_Utama || '') + (node.karya.Genre_Lain ? ' / ' + node.karya.Genre_Lain : '');
+  document.getElementById("focus-audiens").textContent = `👁 ${node.karya.Total_Views} Pembaca`;
+  document.getElementById("focus-rating").textContent = `★ ${node.karya.Rating_Rata2}`;
+  document.getElementById("focus-title").textContent = node.karya.Judul;
+  document.getElementById("focus-author").textContent = node.karya.Penulis ? "Karya " + node.karya.Penulis : "Kurator Velarium";
+  document.getElementById("focus-synopsis").textContent = node.karya.Sinopsis_Singkat;
+  document.getElementById("focus-relation-text").textContent = relationLabel;
+
+  document.getElementById("btn-focus-read").onclick = () => {
+    bukaManuskrip(node.karya.ID_Karya);
+  };
+
+  document.getElementById("btn-focus-recenter").onclick = () => {
+    bangunSimpulRasiBercabang(allWorks, "Pusat Orbit Baru Dipilih", node.karya.ID_Karya);
+  };
+}
+/* ==================== BILIK BACA & PENDUKUNG NASKAH ==================== */
+async function bukaManuskrip(idKarya) {
+  const modal = document.getElementById("modal-reader");
+  const viewport = document.getElementById("reader-viewport");
+  const titleElem = document.getElementById("reader-title");
+  const authorElem = document.getElementById("reader-author");
+  const strip = document.getElementById("reader-chapter-strip");
+
+  modal.classList.remove("hidden");
+  viewport.innerHTML = `<div class="sanctum-loader"><div class="celestial-orbit"></div><p>Membuka bab naskah dari Google Docs...</p></div>`;
+  strip.innerHTML = "";
+
+  try {
+    const resBundle = await fetch(`${BACKEND_URL}?action=detail_karya&idKarya=${encodeURIComponent(idKarya)}`);
+    const bundle = await resBundle.json();
+    currentKarya = bundle.karya || allWorks.find(w => w.ID_Karya === idKarya);
+
+    titleElem.textContent = currentKarya.Judul;
+    authorElem.textContent = currentKarya.Penulis ? "Karya " + currentKarya.Penulis : "Kurator Velarium";
+
+    renderLexiconList(bundle.lexicon || []);
+    if (bundle.temaSalon) {
+      document.getElementById("panggung-nama").textContent = bundle.temaSalon.Nama_Panggung || "Bilik Diskusi";
+      document.getElementById("panggung-suasana").textContent = bundle.temaSalon.Keterangan_Suasana || "Hening beludru dengan senar teater.";
+    }
+
+    renderKomentarList(bundle.komentar || []);
+
+    const resBaca = await fetch(`${BACKEND_URL}?action=baca&idKarya=${encodeURIComponent(idKarya)}`);
+    const dataBaca = await resBaca.json();
+
+    if (dataBaca.status === "error" || !dataBaca.chapters || dataBaca.chapters.length === 0) {
+      viewport.innerHTML = `<div class="empty-text" style="color:#f87171;">${dataBaca.message || 'Naskah belum tersedia atau izin Google Dokumen masih dibatasi.'}</div>`;
+      return;
+    }
+
+    currentChapters = dataBaca.chapters;
+    strip.innerHTML = currentChapters.map((ch, idx) => `
+      <button class="chapter-pill ${idx === 0 ? 'active' : ''}" onclick="pindahBab(${idx})">
+        ${ch.title || 'Bab ' + (idx + 1)}
+      </button>
+    `).join("");
+
+    pindahBab(0);
+  } catch (err) {
+    viewport.innerHTML = `<div class="empty-text" style="color:#f87171;">Gagal membuka manuskrip: ${err.message}</div>`;
+  }
+}
+
+function pindahBab(idx) {
+  document.querySelectorAll(".chapter-pill").forEach((p, i) => p.classList.toggle("active", i === idx));
+  const viewport = document.getElementById("reader-viewport");
+  viewport.innerHTML = currentChapters[idx].content || "<p class='empty-text'>Lembaran bab ini belum berisi teks.</p>";
+  viewport.scrollTop = 0;
+}
+
+function renderLexiconList(list) {
+  const box = document.getElementById("lexicon-entries");
+  if (!list || list.length === 0) {
+    box.innerHTML = `<p class="empty-text">Tidak ada istilah leksikon khusus untuk naskah ini.</p>`;
+    return;
+  }
+  box.innerHTML = list.map(l => `
+    <div class="lex-card">
+      <h6 class="lex-term">✧ ${l.Kata_Kunci}</h6>
+      <p class="lex-meaning">${l.Penjelasan_Dunia}</p>
+    </div>
+  `).join("");
+}
+
+/* ==================== INTERAKSI UMUM & 12 SHEET MODAL ==================== */
+function pasangEventNavigasi() {
+  document.getElementById("btn-notif-toggle").addEventListener("click", () => {
+    document.getElementById("notif-popover").classList.toggle("hidden");
+  });
+
+  document.getElementById("btn-salon-toggle").addEventListener("click", () => {
+    if (!pastikanBukanTamu("The Grand Salon")) return;
+    document.getElementById("drawer-salon").classList.remove("hidden");
+    muatPesanSalon();
+  });
+  document.getElementById("btn-close-salon").addEventListener("click", () => {
+    document.getElementById("drawer-salon").classList.add("hidden");
+  });
+
+  document.getElementById("btn-codex").addEventListener("click", () => {
+    document.getElementById("drawer-codex").classList.remove("hidden");
+    muatCodex();
+  });
+  document.getElementById("btn-close-codex").addEventListener("click", () => {
+    document.getElementById("drawer-codex").classList.add("hidden");
+  });
+
+  document.getElementById("btn-bank-ide").addEventListener("click", () => {
+    document.getElementById("modal-bank-ide").classList.remove("hidden");
+  });
+  document.getElementById("btn-close-bank-ide").addEventListener("click", () => {
+    document.getElementById("modal-bank-ide").classList.add("hidden");
+  });
+
+  document.getElementById("btn-evaluasi").addEventListener("click", () => {
+    document.getElementById("modal-evaluasi").classList.remove("hidden");
+  });
+  document.getElementById("btn-close-evaluasi").addEventListener("click", () => {
+    document.getElementById("modal-evaluasi").classList.add("hidden");
+  });
+
+  document.getElementById("btn-close-owner-dash").addEventListener("click", () => {
+    document.getElementById("modal-owner-dashboard").classList.add("hidden");
+  });
+}
+
+function bukaPanelPembuatWeb() {
+  document.getElementById("modal-owner-dashboard").classList.remove("hidden");
+
+  document.getElementById("btn-owner-get-ide").onclick = async () => {
+    const v = document.getElementById("owner-data-view");
+    v.innerHTML = "Menyerap seluruh baris Bank_Ide_Karya...";
+    const res = await fetch(BACKEND_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "get_bank_ide", token: ownerCuratorToken })
+    });
+    const items = await res.json();
+    v.innerHTML = Array.isArray(items) ? items.map(i => `
+      <div style="padding:8px; border-bottom:1px solid #333; font-size:0.8rem;">
+        <b>[${i.Status_Kurasi || 'Menunggu'}]</b> ${i.Nama_Pengusul} (${i.Kategori_Tema}): <i>${i.Premis_Konsep}</i>
+      </div>
+    `).join("") : "Gagal memuat data privat.";
+  };
+
+  document.getElementById("btn-owner-get-eval").onclick = async () => {
+    const v = document.getElementById("owner-data-view");
+    v.innerHTML = "Menyerap baris Evaluasi_Platform...";
+    const res = await fetch(BACKEND_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "get_evaluasi", token: ownerCuratorToken })
+    });
+    const items = await res.json();
+    v.innerHTML = Array.isArray(items) ? items.map(i => `
+      <div style="padding:8px; border-bottom:1px solid #333; font-size:0.8rem;">
+        <b>${i.Nama_User}</b> (Skor: ${i.Nilai_Kepuasan}/5) [${i.Aspek_Evaluasi}]: ${i.Pesan_Saran}
+      </div>
+    `).join("") : "Gagal memuat data.";
+  };
+
+  document.getElementById("btn-owner-purge-cache").onclick = async () => {
+    if (!confirm("Bersihkan seluruh cache memori server Google Apps Script?")) return;
+    await fetch(BACKEND_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "bersihkan_cache", token: ownerCuratorToken })
+    });
+    alert("Cache server berhasil dibersihkan.");
+    muatKatalog();
+  };
+}
+
+function pasangEventReader() {
+  document.getElementById("btn-close-reader").addEventListener("click", () => {
+    document.getElementById("modal-reader").classList.add("hidden");
+    stopTheaterAudio();
+  });
+
+  document.getElementById("btn-audio-drone").addEventListener("click", toggleTheaterAudio);
+
+  const vp = document.getElementById("reader-viewport");
+  document.getElementById("btn-font-sub").addEventListener("click", () => vp.className = "manuscript-canvas font-sm");
+  document.getElementById("btn-font-add").addEventListener("click", () => vp.className = "manuscript-canvas font-lg");
+
+  const tLex = document.getElementById("tab-lexicon");
+  const tAtmos = document.getElementById("tab-suasana");
+  const bLex = document.getElementById("alcove-lexicon-content");
+  const bAtmos = document.getElementById("alcove-suasana-content");
+
+  tLex.addEventListener("click", () => {
+    tLex.classList.add("active"); tAtmos.classList.remove("active");
+    bLex.classList.remove("hidden"); bAtmos.classList.add("hidden");
+  });
+  tAtmos.addEventListener("click", () => {
+    tAtmos.classList.add("active"); tLex.classList.remove("active");
+    bAtmos.classList.remove("hidden"); bLex.classList.add("hidden");
+  });
+
+  document.getElementById("btn-toggle-komentar").addEventListener("click", () => {
+    document.getElementById("drawer-komentar").classList.toggle("hidden");
+  });
+
+  document.querySelectorAll("#star-meter span").forEach(star => {
+    star.addEventListener("click", async () => {
+      if (!pastikanBukanTamu("Beri Resonansi Bintang")) return;
+      const val = parseInt(star.getAttribute("data-v"));
+      document.querySelectorAll("#star-meter span").forEach((s, idx) => s.classList.toggle("active", idx < val));
+      document.getElementById("numeric-rating-val").textContent = val.toFixed(1);
+      if (!currentKarya) return;
+
+      try {
+        const res = await fetch(BACKEND_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "kirim_rating", idKarya: currentKarya.ID_Karya, namaUser: currentUser.userId, skorBintang: val })
+        });
+        const d = await res.json();
+        if (d.ratingBaru) document.getElementById("numeric-rating-val").textContent = d.ratingBaru;
+      } catch (e) {}
+    });
+  });
+}
+
+function pasangEventFormulir() {
+  document.getElementById("btn-kirim-komentar").addEventListener("click", async () => {
+    if (!pastikanBukanTamu("Kirim Komentar")) return;
+    const author = document.getElementById("komentar-penulis").value.trim() || currentUser.userId;
+    const bodyInput = document.getElementById("komentar-teks");
+    const body = bodyInput.value.trim();
+    if (!body || !currentKarya) return;
+
+    bodyInput.value = "";
+    await fetch(BACKEND_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "kirim_komentar", idKarya: currentKarya.ID_Karya, namaUser: author, isiKomentar: body, nomorBab: "Bab Pembacaan" })
+    });
+
+    const stream = document.getElementById("stream-komentar");
+    const item = document.createElement("div");
+    item.className = "komentar-bubble";
+    item.innerHTML = `<div class="bubble-head"><b>${author}</b> <span>Baru saja</span></div><div class="bubble-body">${body}</div>`;
+    stream.prepend(item);
+  });
+
+  document.getElementById("form-chat-salon").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!pastikanBukanTamu("Obrolan Grand Salon")) return;
+    const nama = document.getElementById("salon-input-nama").value.trim() || currentUser.userId;
+    const inputMsg = document.getElementById("salon-input-pesan");
+    const msg = inputMsg.value.trim();
+    if (!msg) return;
+
+    inputMsg.value = "";
+    await fetch(BACKEND_URL, {
+      method: "POST",
+      body: JSON.stringify({ 
+        action: "kirim_chat_salon", 
+        namaUser: nama, 
+        isiPesan: msg, 
+        room: "Lobi_Utama", 
+        isAdmin: currentUser.role === "owner",
+        token: ownerCuratorToken
+      })
+    });
+    muatPesanSalon();
+  });
+
+  document.getElementById("form-bank-ide").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const nama = document.getElementById("ide-nama").value.trim() || currentUser.userId;
+    const kat = document.getElementById("ide-kategori").value.trim();
+    const premis = document.getElementById("ide-premis").value.trim();
+    const ark = document.getElementById("ide-arketipe").value.trim();
+
+    await fetch(BACKEND_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "kirim_ide_cerita", namaPengusul: nama, kategoriTema: kat, premisKonsep: premis, arketipeTokoh: ark })
+    });
+
+    alert("Ide berhasil dicatat ke Bank Ide!");
+    document.getElementById("modal-bank-ide").classList.add("hidden");
+    document.getElementById("form-bank-ide").reset();
+  });
+
+  document.getElementById("form-evaluasi").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const nama = document.getElementById("eval-nama").value.trim() || currentUser.userId;
+    const peran = document.getElementById("eval-peran").value.trim() || currentUser.role;
+    const aspek = document.getElementById("eval-aspek").value.trim();
+    const nilai = document.getElementById("eval-nilai").value;
+    const saran = document.getElementById("eval-pesan").value.trim();
+
+    await fetch(BACKEND_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "kirim_evaluasi", namaUser: nama, peranUser: peran, aspekEvaluasi: aspek, nilaiKepuasan: nilai, pesanSaran: saran })
+    });
+    alert("Terima kasih, evaluasimu telah diterima!");
+    document.getElementById("modal-evaluasi").classList.add("hidden");
+    document.getElementById("form-evaluasi").reset();
+  });
+
+  document.getElementById("btn-open-mood").addEventListener("click", () => {
+    if (!pastikanBukanTamu("Rekam Jejak Mood")) return;
+    document.getElementById("modal-mood").classList.remove("hidden");
+  });
+  document.getElementById("btn-close-mood").addEventListener("click", () => document.getElementById("modal-mood").classList.add("hidden"));
+  document.getElementById("form-mood").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!currentKarya) return;
+    const kesan = document.getElementById("mood-kesan").value.trim();
+    const waktu = document.getElementById("mood-waktu").value.trim();
+    await fetch(BACKEND_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "kirim_mood", idKarya: currentKarya.ID_Karya, namaUser: currentUser.userId, kesanMood: kesan, cocokDibacaSaat: waktu })
+    });
+    alert("Jejak mood terabadikan!");
+    document.getElementById("modal-mood").classList.add("hidden");
+    document.getElementById("form-mood").reset();
+  });
+
+  document.getElementById("btn-save-vault").addEventListener("click", () => {
+    if (!pastikanBukanTamu("Simpan ke Vault")) return;
+    document.getElementById("modal-vault").classList.remove("hidden");
+  });
+  document.getElementById("btn-close-vault").addEventListener("click", () => document.getElementById("modal-vault").classList.add("hidden"));
+  document.getElementById("form-vault").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!currentKarya) return;
+    const txt = document.getElementById("vault-teks").value.trim();
+    await fetch(BACKEND_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "simpan_kutipan", idKarya: currentKarya.ID_Karya, namaUser: currentUser.userId, teksKutipan: txt })
+    });
+    alert("Kutipan disimpan ke Vault!");
+    document.getElementById("modal-vault").classList.add("hidden");
+    document.getElementById("form-vault").reset();
+  });
+
+  document.getElementById("btn-gift-vip").addEventListener("click", () => {
+    if (!pastikanBukanTamu("Apresiasi VIP")) return;
+    document.getElementById("modal-gift").classList.remove("hidden");
+  });
+  document.getElementById("btn-close-gift").addEventListener("click", () => document.getElementById("modal-gift").classList.add("hidden"));
+  document.getElementById("form-gift").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!currentKarya) return;
+    const sender = document.getElementById("gift-sender").value.trim();
+    const receiver = document.getElementById("gift-receiver").value.trim();
+    await fetch(BACKEND_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "kirim_gift", idKarya: currentKarya.ID_Karya, emailPengirim: sender, emailPenerima: receiver })
+    });
+    alert("Apresiasi tercatat ke Gift Registry!");
+    document.getElementById("modal-gift").classList.add("hidden");
+    document.getElementById("form-gift").reset();
+  });
+}
+
+function renderKomentarList(list) {
+  const stream = document.getElementById("stream-komentar");
+  document.getElementById("count-komentar").textContent = list.length;
+  if (!list || list.length === 0) {
+    stream.innerHTML = `<div class="empty-text">Belum ada tanggapan untuk bab ini. Mulailah dialog!</div>`;
+    return;
+  }
+  stream.innerHTML = list.map(c => `
+    <div class="komentar-bubble">
+      <div class="bubble-head"><b>${c.Nama_User}</b> <span>${c.Timestamp}</span></div>
+      <div class="bubble-body">${c.Isi_Komentar}</div>
+    </div>
+  `).join("");
+}
+
+async function muatPesanSalon() {
+  const stream = document.getElementById("salon-message-stream");
+  try {
+    const res = await fetch(`${BACKEND_URL}?action=get_chat_salon&room=Lobi_Utama`);
+    const msgs = await res.json();
+    if (!Array.isArray(msgs) || msgs.length === 0) {
+      stream.innerHTML = `<div class="empty-text">Belum ada obrolan di Grand Salon.</div>`;
+      return;
+    }
+    stream.innerHTML = msgs.map(m => `
+      <div class="chat-bubble ${m.Is_Admin ? 'admin' : ''}">
+        <div class="chat-head">
+          <span>${m.Nama_User} ${m.Is_Admin ? '⚜ Kurator' : ''}</span>
+          <small>${m.Timestamp ? m.Timestamp.split(' ')[1] : ''}</small>
+        </div>
+        <div class="chat-text">${m.Isi_Pesan}</div>
+      </div>
+    `).join("");
+    stream.scrollTop = stream.scrollHeight;
+  } catch (e) {}
+}
+
+async function muatCodex() {
+  const stream = document.getElementById("codex-stream");
+  try {
+    const res = await fetch(`${BACKEND_URL}?action=get_codex`);
+    const list = await res.json();
+    if (!Array.isArray(list) || list.length === 0) {
+      stream.innerHTML = `<div class="empty-text">Belum ada warta kurator di Founders Codex.</div>`;
+      return;
+    }
+    stream.innerHTML = list.map(c => `
+      <div class="komentar-bubble">
+        <div class="bubble-head"><b>${c.Judul}</b> <span>${c.Tanggal}</span></div>
+        <div class="bubble-body">${c.Isi_Catatan}</div>
+      </div>
+    `).join("");
+  } catch (e) {}
+}
+
+async function muatNotifikasi() {
+  try {
+    const res = await fetch(`${BACKEND_URL}?action=get_notifikasi`);
+    const data = await res.json();
+    if (data.unreadCount) document.getElementById("notif-badge").textContent = data.unreadCount;
+    const listElem = document.getElementById("notif-list");
+    if (data.notifs) {
+      listElem.innerHTML = data.notifs.map(n => `
+        <div style="padding:10px; border-bottom:1px solid rgba(255,255,255,0.06);">
+          <div style="font-size:0.8rem; color:#e6c35c; font-weight:700;">${n.title}</div>
+          <div style="font-size:0.75rem; color:#9aa4b8;">${n.desc}</div>
+        </div>
+      `).join("");
+    }
+  } catch (e) {}
+}
+</script>
+</body>
+</html>
